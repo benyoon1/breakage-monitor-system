@@ -1,0 +1,17 @@
+branch-defaults:
+  main:
+    environment: websocket-env
+environment-defaults:
+  websocket-env:
+    branch: null
+    repository: null
+global:
+  application_name: websocket-app
+  default_region: us-east-1
+  include_git_submodules: true
+  instance_profile: null
+  platform_name: null
+  platform_version: null
+  profile: null
+  sc: null
+  workspace_type: Application

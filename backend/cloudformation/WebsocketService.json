@@ -1,0 +1,96 @@
+{
+  "AWSTemplateFormatVersion": "2010-09-09",
+  "Description": "The template used to create an ECS Service from the ECS Console.",
+  "Parameters": {
+    "ECSClusterName": {
+      "Type": "String",
+      "Default": "WebsocketCluster"
+    },
+    "ECSServiceName": {
+      "Type": "String",
+      "Default": "WebsocketService"
+    },
+    "SecurityGroupIDs": {
+      "Type": "CommaDelimitedList",
+      "Default": "sg-06cfd960e44069041"
+    },
+    "SubnetIDs": {
+      "Type": "CommaDelimitedList",
+      "Default": "subnet-0d8339b759bafa410,subnet-06ace3e9f5f3be16c,subnet-0f50944c31beb4091,subnet-090d487aef1df35c7,subnet-0b3a58f2ffe754d35,subnet-05f08678010529d37"
+    },
+    "VpcID": {
+      "Type": "String",
+      "Default": "vpc-0e266cb25b684fccf"
+    },
+    "LoadBalancerName": {
+      "Type": "String",
+      "Default": "WebsocketLB"
+    }
+  },
+  "Resources": {
+    "ECSService": {
+      "Type": "AWS::ECS::Service",
+      "Properties": {
+        "Cluster": "WebsocketCluster",
+        "TaskDefinition": "arn:aws:ecs:us-east-1:715841359008:task-definition/WebsocketTaskDefinition:1",
+        "LaunchType": "FARGATE",
+        "ServiceName": "WebsocketService",
+        "SchedulingStrategy": "REPLICA",
+        "DesiredCount": 1,
+        "AvailabilityZoneRebalancing": "ENABLED",
+        "LoadBalancers": [
+          {
+            "ContainerName": "websocket",
+            "ContainerPort": 8080,
+            "LoadBalancerName": {
+              "Ref": "AWS::NoValue"
+            },
+            "TargetGroupArn": "arn:aws:elasticloadbalancing:us-east-1:715841359008:targetgroup/WebsocketTargetGroup/6490bb79d5a80418"
+          }
+        ],
+        "NetworkConfiguration": {
+          "AwsvpcConfiguration": {
+            "AssignPublicIp": "ENABLED",
+            "SecurityGroups": {
+              "Ref": "SecurityGroupIDs"
+            },
+            "Subnets": {
+              "Ref": "SubnetIDs"
+            }
+          }
+        },
+        "PlatformVersion": "LATEST",
+        "DeploymentConfiguration": {
+          "MaximumPercent": 200,
+          "MinimumHealthyPercent": 100,
+          "DeploymentCircuitBreaker": {
+            "Enable": true,
+            "Rollback": true
+          }
+        },
+        "DeploymentController": {
+          "Type": "ECS"
+        },
+        "ServiceConnectConfiguration": {
+          "Enabled": false
+        },
+        "Tags": [],
+        "EnableECSManagedTags": true
+      }
+    }
+  },
+  "Outputs": {
+    "ClusterName": {
+      "Description": "The cluster used to create the service.",
+      "Value": {
+        "Ref": "ECSClusterName"
+      }
+    },
+    "ECSService": {
+      "Description": "The created service.",
+      "Value": {
+        "Ref": "ECSService"
+      }
+    }
+  }
+}
