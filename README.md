@@ -4,10 +4,7 @@ In September 2024, the Concordia Hall building was vandalized during a violent p
 
 ## Demo Video
 
-<video width="640" height="360" controls>
-  <source src="assets/iot-video.mp4" type="video/mp4">
-  Your browser does not support the video tag.
-</video>
+[![Demo Video](https://img.youtube.com/vi/Lb-nVxnLtGk/0.jpg)](https://youtu.be/Lb-nVxnLtGk)
 
 ## System Architecture
 
